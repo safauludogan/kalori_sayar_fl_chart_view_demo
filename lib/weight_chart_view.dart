@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
 
 class WeightChartView extends StatefulWidget {
-  const WeightChartView({Key? key}) : super(key: key);
+  const WeightChartView({super.key});
 
   @override
   State<WeightChartView> createState() => _WeightChartViewState();
@@ -24,7 +24,7 @@ class _WeightChartViewState extends State<WeightChartView> {
   void initState() {
     super.initState();
     spots = [
-      const FlSpot(0, 0),
+      FlSpot.zero,
       const FlSpot(1, 1.5),
       const FlSpot(2, 2.2),
       const FlSpot(3, 2.6),
@@ -55,7 +55,6 @@ class _WeightChartViewState extends State<WeightChartView> {
 
   LineChart _lineChart() {
     return LineChart(
-      swapAnimationDuration: const Duration(milliseconds: 150),
       LineChartData(
         minX: 0,
         maxX: 18,
@@ -86,7 +85,6 @@ class _WeightChartViewState extends State<WeightChartView> {
               ),
             ),
             dotData: FlDotData(
-              show: true,
               getDotPainter: (p0, p1, p2, p3) => FlDotCirclePainter(
                 color: const Color(0xffF59841),
                 radius: chartDotRadius,
@@ -103,89 +101,87 @@ class _WeightChartViewState extends State<WeightChartView> {
           ),
         ],
         gridData: FlGridData(
-            getDrawingHorizontalLine: (value) =>
-                FlLine(color: Colors.grey.shade300, strokeWidth: 1),
-            horizontalInterval: 2,
-            show: chartHorizontalLinesShow,
-            drawHorizontalLine: true,
-            drawVerticalLine: false,
-            getDrawingVerticalLine: (value) {
-              return FlLine(
-                color: Colors.transparent,
-                strokeWidth: 0.8,
-              );
-            }),
+          getDrawingHorizontalLine: (value) =>
+              FlLine(color: Colors.grey.shade300, strokeWidth: 1),
+          horizontalInterval: 2,
+          show: chartHorizontalLinesShow,
+          drawVerticalLine: false,
+          getDrawingVerticalLine: (value) {
+            return const FlLine(
+              color: Colors.transparent,
+              strokeWidth: 0.8,
+            );
+          },
+        ),
         lineTouchData: LineTouchData(
-            enabled: false,
-            touchTooltipData: LineTouchTooltipData(
-              tooltipRoundedRadius: 12,
-              tooltipPadding: EdgeInsets.zero,
-              getTooltipItems: (value) {
-                return value
-                    .map((e) => LineTooltipItem(
-                        "+12.3 ",
-                        children: [const TextSpan(text: 'kg')],
-                        const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.red)))
-                    .toList();
-              },
-              tooltipBgColor: Colors.transparent,
-            )),
+          enabled: false,
+          touchTooltipData: LineTouchTooltipData(
+            tooltipRoundedRadius: 12,
+            tooltipPadding: EdgeInsets.zero,
+            getTooltipItems: (value) {
+              return value
+                  .map(
+                    (e) => const LineTooltipItem(
+                      '+12.3 ',
+                      children: [TextSpan(text: 'kg')],
+                      TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.red,
+                      ),
+                    ),
+                  )
+                  .toList();
+            },
+            getTooltipColor: (touchedSpot) => Colors.transparent,
+          ),
+        ),
 
         showingTooltipIndicators: [
           ShowingTooltipIndicators(
             [
               LineBarSpot(
-                  LineChartBarData(
-                      show: false,
-                      color: Colors.white,
-                      dotData: FlDotData(
-                        show: true,
-                      )),
-                  1,
-                  FlSpot(lastXCordinat, lastYCordinat))
+                LineChartBarData(
+                  show: false,
+                  color: Colors.white,
+                ),
+                1,
+                FlSpot(lastXCordinat, lastYCordinat),
+              ),
             ],
           ),
         ],
         borderData: FlBorderData(show: false),
         titlesData: FlTitlesData(
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          rightTitles: AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          topTitles: AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
+          leftTitles: const AxisTitles(),
+          rightTitles: const AxisTitles(),
+          topTitles: const AxisTitles(),
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
-                showTitles: showTitles,
-                reservedSize: 30,
-                interval: 3,
-                getTitlesWidget: (value, meta) {
-                  String text = '';
-                  switch (value.toInt()) {
-                    case 0:
-                      text = "80.3 kg";
-                      break;
-                    default:
-                      return Container();
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 12, left: 18),
-                    child: Text(
-                      text,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey,
-                        fontSize: 12,
-                      ),
+              showTitles: showTitles,
+              reservedSize: 30,
+              interval: 3,
+              getTitlesWidget: (value, meta) {
+                var text = '';
+                switch (value.toInt()) {
+                  case 0:
+                    text = '80.3 kg';
+                  default:
+                    return Container();
+                }
+                return Padding(
+                  padding: const EdgeInsets.only(top: 12, left: 18),
+                  child: Text(
+                    text,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                      fontSize: 12,
                     ),
-                  );
-                }),
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ),
